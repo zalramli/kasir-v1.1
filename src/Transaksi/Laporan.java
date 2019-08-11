@@ -90,13 +90,19 @@ public class Laporan extends javax.swing.JInternalFrame {
     }
 
     private void tampil_hari_ini() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("NAMA KASIR");
-        model.addColumn("TANGGAL TRANSAKSI");
-        model.addColumn("TOTAL HARGA");
-        model.addColumn("TOTAL BAYAR");
-        model.addColumn("KEMBALIAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Kasir","Tanggal Transaksi","Total Harga","Total Bayar","Kembalian"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         JTableHeader Theader = tbl_laporan.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.BOLD, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())
@@ -149,13 +155,19 @@ public class Laporan extends javax.swing.JInternalFrame {
     }
     
     private void tampil_minggu_ini() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("NAMA KASIR");
-        model.addColumn("TANGGAL TRANSAKSI");
-        model.addColumn("TOTAL HARGA");
-        model.addColumn("TOTAL BAYAR");
-        model.addColumn("KEMBALIAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Kasir","Tanggal Transaksi","Total Harga","Total Bayar","Kembalian"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         JTableHeader Theader = tbl_laporan.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.BOLD, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())
@@ -218,13 +230,19 @@ public class Laporan extends javax.swing.JInternalFrame {
     }
     
     private void tampil_bulan_ini() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("NAMA KASIR");
-        model.addColumn("TANGGAL TRANSAKSI");
-        model.addColumn("TOTAL HARGA");
-        model.addColumn("TOTAL BAYAR");
-        model.addColumn("KEMBALIAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Kasir","Tanggal Transaksi","Total Harga","Total Bayar","Kembalian"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         JTableHeader Theader = tbl_laporan.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.BOLD, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())
@@ -278,13 +296,19 @@ public class Laporan extends javax.swing.JInternalFrame {
     
 
     private void tampil_data() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("NAMA KASIR");
-        model.addColumn("TANGGAL TRANSAKSI");
-        model.addColumn("TOTAL HARGA");
-        model.addColumn("TOTAL BAYAR");
-        model.addColumn("KEMBALIAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Kasir","Tanggal Transaksi","Total Harga","Total Bayar","Kembalian"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         JTableHeader Theader = tbl_laporan.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.BOLD, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())
@@ -334,13 +358,19 @@ public class Laporan extends javax.swing.JInternalFrame {
     }
 
     private void tampil_data_filter() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("NAMA KASIR");
-        model.addColumn("TANGGAL TRANSAKSI");
-        model.addColumn("TOTAL HARGA");
-        model.addColumn("TOTAL BAYAR");
-        model.addColumn("KEMBALIAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Kasir","Tanggal Transaksi","Total Harga","Total Bayar","Kembalian"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         JTableHeader Theader = tbl_laporan.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.BOLD, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())

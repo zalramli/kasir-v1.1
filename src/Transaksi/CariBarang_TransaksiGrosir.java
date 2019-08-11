@@ -47,12 +47,19 @@ public class CariBarang_TransaksiGrosir extends javax.swing.JFrame {
     }
     private void tampil_data() {
         // membuat tampilan model tabel
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Kode");
-        model.addColumn("Nama");
-        model.addColumn("Kategori");
-        model.addColumn("Jenis Satuan");
-        model.addColumn("Jumlah Stok");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama","Kategori","Satuan","Stok"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
         //menampilkan data database kedalam tabel
         try {
             //int no=1;
@@ -146,14 +153,20 @@ public class CariBarang_TransaksiGrosir extends javax.swing.JFrame {
 
     private void txt_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cariActionPerformed
         // TODO add your handling code here:
-        try {
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("Kode");
-            model.addColumn("Nama");
-            model.addColumn("Kategori");
-            model.addColumn("Jenis Satuan");
-            model.addColumn("Jumlah Stok");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama","Kategori","Satuan","Stok"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false,false,false,false
+            };
 
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
+        try {
             String cari = txt_cari.getText();
             String sql = "SELECT * FROM barang b JOIN kategori k ON b.id_kategori=k.id_kategori JOIN satuan s ON b.id_satuan = s.id_satuan "
                     + "WHERE b.id_barang LIKE '%" + cari + "%' OR b.nm_barang LIKE '%" + cari + "%' OR k.nm_kategori LIKE '%" + cari

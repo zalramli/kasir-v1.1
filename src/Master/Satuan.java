@@ -65,9 +65,19 @@ public class Satuan extends javax.swing.JInternalFrame {
 
     private void tampil_data() {
         // membuat tampilan model tabel
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("KODE");
-        model.addColumn("NAMA SATUAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Satuan"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
 
         //menampilkan data database kedalam tabel
         try {
@@ -287,11 +297,20 @@ public class Satuan extends javax.swing.JInternalFrame {
 
     private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
         // TODO add your handling code here:
-        try {
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("KODE");
-            model.addColumn("NAMA SATUAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Satuan"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false
+            };
 
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
+        try {
             String cari = txt_cari.getText();
             String sql = "SELECT * FROM satuan WHERE id_satuan LIKE '%" + cari + "%' OR nm_satuan LIKE '%" + cari + "%' ORDER BY id_satuan";
             java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
@@ -394,11 +413,20 @@ public class Satuan extends javax.swing.JInternalFrame {
 
     private void txt_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cariActionPerformed
         // TODO add your handling code here:
-        try {
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("KODE");
-            model.addColumn("NAMA SATUAN");
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{"Kode", "Nama Satuan"
+            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+            false, false
+            };
 
+            public boolean isCellEditable(int row, int column) {
+            return tdk_bisa_edit[column];
+            }
+        };
+        try {
             String cari = txt_cari.getText();
             String sql = "SELECT * FROM satuan WHERE id_satuan LIKE '%" + cari + "%' OR nm_satuan LIKE '%" + cari + "%' ORDER BY id_satuan";
             java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
