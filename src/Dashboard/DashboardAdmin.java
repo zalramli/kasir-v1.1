@@ -30,7 +30,6 @@ public class DashboardAdmin extends javax.swing.JFrame {
     User var_user;
     Pemasokan var_pemasokan;
     Transaksi var_transaksi;
-    TransaksiGrosir var_transaksi_grosir;
     Laporan var_laporan;
     DataStok var_data_stok;
     Kategori var_kategori;
@@ -596,38 +595,18 @@ public class DashboardAdmin extends javax.swing.JFrame {
     private void btn_transaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_transaksiMouseClicked
         // TODO add your handling code here:
 
-        String[] options = {"ECERAN", "GROSIR"};
-        int konfirmasi = JOptionPane.showOptionDialog(null, "Pilih Jenis Transaksi",
-                "Pilih Salah Satu",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        // warna menu
+        resetTunjuk();
+        tunjuk[3] = true;
+        resetWarna(new JPanel[]{btn_user, btn_distributor, btn_barang, btn_transaksi, btn_pemasokan, btn_laporan});
+        setWarna(btn_transaksi);
 
-        if (konfirmasi == 0) {
-            // warna menu
-            resetTunjuk();
-            tunjuk[3] = true;
-            resetWarna(new JPanel[]{btn_user, btn_distributor, btn_barang, btn_transaksi, btn_pemasokan, btn_laporan});
-            setWarna(btn_transaksi);
-
-            // memanggil jInternalFrame 
-            hide_pane();
-            stat[3] = true;
-            var_transaksi = new Transaksi();
-            dekstop_pane.add(var_transaksi);
-            var_transaksi.setVisible(true);
-        } else if(konfirmasi == 1) {
-            // warna menu
-            resetTunjuk();
-            tunjuk[3] = true;
-            resetWarna(new JPanel[]{btn_user, btn_distributor, btn_barang, btn_transaksi, btn_pemasokan, btn_laporan});
-            setWarna(btn_transaksi);
-
-            // memanggil jInternalFrame 
-            hide_pane();
-            stat[3] = true;
-            var_transaksi_grosir = new TransaksiGrosir();
-            dekstop_pane.add(var_transaksi_grosir);
-            var_transaksi_grosir.setVisible(true);
-        }
+        // memanggil jInternalFrame 
+        hide_pane();
+        stat[3] = true;
+        var_transaksi = new Transaksi();
+        dekstop_pane.add(var_transaksi);
+        var_transaksi.setVisible(true);
 
     }//GEN-LAST:event_btn_transaksiMouseClicked
 

@@ -52,7 +52,7 @@ public class Transaksi extends javax.swing.JInternalFrame {
 
     DefaultTableModel list_produk = new DefaultTableModel(
             new Object[][]{},
-            new String[]{"KODE BARANG", "NAMA BARANG", "SATUAN", "QTY", "HARGA ECERAN", "TOTAL", "jml_stok"
+            new String[]{"KODE BARANG", "NAMA BARANG", "SATUAN", "QTY", "HARGA JUAL", "TOTAL", "jml_stok"
             }) // BIAR FIELD TABEL TIDAK BISA EDIT
     {
         boolean[] tdk_bisa_edit = new boolean[]{
@@ -448,7 +448,7 @@ public class Transaksi extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "KODE BARANG", "NAMA BARANG", "SATUAN", "QTY", "HARGA ECERAN", "TOTAL"
+                "KODE BARANG", "NAMA BARANG", "SATUAN", "QTY", "HARGA JUAL", "TOTAL"
             }
         ));
         daftar_produk.setAlignmentX(5.0F);

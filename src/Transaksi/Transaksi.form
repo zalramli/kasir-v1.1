@@ -201,7 +201,7 @@
                 <Column editable="true" title="NAMA BARANG" type="java.lang.Object"/>
                 <Column editable="true" title="SATUAN" type="java.lang.Object"/>
                 <Column editable="true" title="QTY" type="java.lang.Object"/>
-                <Column editable="true" title="HARGA ECERAN" type="java.lang.Object"/>
+                <Column editable="true" title="HARGA JUAL" type="java.lang.Object"/>
                 <Column editable="true" title="TOTAL" type="java.lang.Object"/>
               </Table>
             </Property>
