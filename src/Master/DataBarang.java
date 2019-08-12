@@ -117,11 +117,11 @@ public class DataBarang extends javax.swing.JInternalFrame {
         // membuat tampilan model tabel
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
+                new String[]{"No","Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
                 }) // BIAR FIELD TABEL TIDAK BISA EDIT
         {
             boolean[] tdk_bisa_edit = new boolean[]{
-                false, false, false, false, false, false, false
+                false,false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int row, int column) {
@@ -130,12 +130,14 @@ public class DataBarang extends javax.swing.JInternalFrame {
         };
         //menampilkan data database kedalam tabel
         try {
-            //int no=1;
+            int no = 0;
             String sql = "SELECT * FROM barang b ,kategori k , satuan s where b.id_kategori = k.id_kategori && b.id_satuan = s.id_satuan ORDER BY nm_barang ASC";
             java.sql.Connection conn = (com.mysql.jdbc.Connection) Koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             while (res.next()) {
+                
+                no = no + 1 ;
 
                 int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
                 double angka = (double) hrg_eceran;
@@ -146,14 +148,14 @@ public class DataBarang extends javax.swing.JInternalFrame {
                 String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
 
                 // menambahkan baris data kedalam table
-                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
+                model.addRow(new Object[]{no,res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
                     harga_eceran, harga_beli});
             }
             jTable1.setModel(model);
             DefaultTableCellRenderer right = new DefaultTableCellRenderer();
             right.setHorizontalAlignment(JLabel.RIGHT);
-            jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
             jTable1.getColumnModel().getColumn(6).setCellRenderer(right);
+            jTable1.getColumnModel().getColumn(7).setCellRenderer(right);
         } catch (SQLException e) {
             Component rootPane = null;
             JOptionPane.showMessageDialog(rootPane, "Gagal Menampilkan Data");
@@ -203,13 +205,13 @@ public class DataBarang extends javax.swing.JInternalFrame {
         int baris = Integer.parseInt(txt_baris.getText());
 
         // mengambil data sesuai baris dan kolom ke-X
-        String kode = jTable1.getValueAt(baris, 0).toString();
-        String nama = jTable1.getValueAt(baris, 1).toString();
-        String kategori = jTable1.getValueAt(baris, 2).toString();
-        String stok = jTable1.getValueAt(baris, 3).toString();
-        String satuan = jTable1.getValueAt(baris, 4).toString();
-        String hrg_jual = jTable1.getValueAt(baris, 5).toString();
-        String hrg_beli = jTable1.getValueAt(baris, 6).toString();
+        String kode = jTable1.getValueAt(baris, 1).toString();
+        String nama = jTable1.getValueAt(baris, 2).toString();
+        String kategori = jTable1.getValueAt(baris, 3).toString();
+        String stok = jTable1.getValueAt(baris, 4).toString();
+        String satuan = jTable1.getValueAt(baris, 5).toString();
+        String hrg_jual = jTable1.getValueAt(baris, 6).toString();
+        String hrg_beli = jTable1.getValueAt(baris, 7).toString();
 
         // menaruh data ke dalam objek txt
         txt_kode.setText(kode);
@@ -261,11 +263,11 @@ public class DataBarang extends javax.swing.JInternalFrame {
         // membuat table
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
+                new String[]{"No","Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
                 }) // BIAR FIELD TABEL TIDAK BISA EDIT
         {
             boolean[] tdk_bisa_edit = new boolean[]{
-                false, false, false, false, false, false, false
+                false,false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int row, int column) {
@@ -273,6 +275,9 @@ public class DataBarang extends javax.swing.JInternalFrame {
             }
         };
         try {
+            
+            int no = 0;
+            
             String cari = txt_cari.getText();
             String sql = "SELECT * FROM barang b JOIN kategori k ON b.id_kategori=k.id_kategori JOIN satuan s ON b.id_satuan = s.id_satuan "
                     + "WHERE b.id_barang LIKE '%" + cari + "%' OR b.nm_barang LIKE '%" + cari + "%' OR k.nm_kategori LIKE '%" + cari + "%' OR b.hrg_jual LIKE '%" + cari
@@ -281,6 +286,9 @@ public class DataBarang extends javax.swing.JInternalFrame {
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             while (res.next()) {
+                
+                no = no + 1 ;
+                
                 int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
                 double angka = (double) hrg_eceran;
                 String harga_eceran = String.format("%,.0f", angka).replaceAll(",", ".");
@@ -290,14 +298,14 @@ public class DataBarang extends javax.swing.JInternalFrame {
                 String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
 
                 // menambahkan baris data ke dalam tabel
-                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
+                model.addRow(new Object[]{no,res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
                     harga_eceran, harga_beli});
             }
             jTable1.setModel(model);
             DefaultTableCellRenderer right = new DefaultTableCellRenderer();
             right.setHorizontalAlignment(JLabel.RIGHT);
-            jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
             jTable1.getColumnModel().getColumn(6).setCellRenderer(right);
+            jTable1.getColumnModel().getColumn(7).setCellRenderer(right);
             txt_cari.setText(null);
             custom_tabel();
         } catch (Exception ex) {
