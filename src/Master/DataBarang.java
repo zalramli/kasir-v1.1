@@ -58,10 +58,13 @@ public class DataBarang extends javax.swing.JInternalFrame {
 //        col1.setMaxWidth(450);
 //        col1.setWidth(450);
 //        col1.setPreferredWidth(450);
+
         //ngatur font
         jTable1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
         //ngatur jarak tinggi
         jTable1.setRowHeight(50);
+
         //ngatur header
         JTableHeader Theader = jTable1.getTableHeader();
         Theader.setFont(new Font("Tahoma", Font.PLAIN, 14));
