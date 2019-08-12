@@ -48,11 +48,10 @@ public class DataBarang extends javax.swing.JInternalFrame {
         ambil_satuan();
         txt_baris.setVisible(false);
         custom_tabel();
-        
+
     }
-    
-    private void custom_tabel()
-    {
+
+    private void custom_tabel() {
         //ngatur widht coloumn nama barang
 //        TableColumn col1 = jTable1.getColumnModel().getColumn(1);
 //        col1.setMinWidth(450);
@@ -70,6 +69,7 @@ public class DataBarang extends javax.swing.JInternalFrame {
                 .setHorizontalAlignment(JLabel.CENTER);
     }
 
+    // untuk menghilangkan dekorasi pada frame
     void removeDecoration() {
         for (MouseListener listener : ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).getNorthPane().getMouseListeners()) {
             ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).getNorthPane().removeMouseListener(listener);
@@ -78,6 +78,7 @@ public class DataBarang extends javax.swing.JInternalFrame {
         this.remove(titlePane);
     }
 
+    // kondisi button saat pertama kali di click
     public void button_awal() {
         btn_simpan.setEnabled(true);
         btn_batal.setEnabled(true);
@@ -86,14 +87,16 @@ public class DataBarang extends javax.swing.JInternalFrame {
 
     }
 
+    // kondisi button saat table di click
     public void button_tabelklik() {
         btn_simpan.setEnabled(false);
         btn_batal.setEnabled(true);
         btn_update.setEnabled(true);
         btn_hapus.setEnabled(true);
-
+        txt_kode.setEditable(false);
     }
 
+    // kondisi default inputan
     private void reset_input() {
         txt_kode.setText(null);
         txt_nama.setText(null);
@@ -106,19 +109,20 @@ public class DataBarang extends javax.swing.JInternalFrame {
         txt_baris.setText(null);
     }
 
+    // memanggil data dan membuat table
     private void tampil_data() {
         // membuat tampilan model tabel
         DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan" , "Harga Jual" , "Harga Distributor"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+                new Object[][]{},
+                new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
+                }) // BIAR FIELD TABEL TIDAK BISA EDIT
         {
             boolean[] tdk_bisa_edit = new boolean[]{
-            false, false, false, false,false,false,false,false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
+                return tdk_bisa_edit[column];
             }
         };
         //menampilkan data database kedalam tabel
@@ -129,26 +133,31 @@ public class DataBarang extends javax.swing.JInternalFrame {
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             while (res.next()) {
-                
+
                 int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
-                int hrg_beli = Integer.parseInt(res.getString("hrg_beli"));
                 double angka = (double) hrg_eceran;
                 String harga_eceran = String.format("%,.0f", angka).replaceAll(",", ".");
+
+                int hrg_beli = Integer.parseInt(res.getString("hrg_beli"));
                 double angka3 = (double) hrg_beli;
                 String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
 
-                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"), 
-                    harga_eceran,harga_beli});
+                // menambahkan baris data kedalam table
+                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
+                    harga_eceran, harga_beli});
             }
             jTable1.setModel(model);
             DefaultTableCellRenderer right = new DefaultTableCellRenderer();
             right.setHorizontalAlignment(JLabel.RIGHT);
             jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
-            jTable1.getColumnModel().getColumn(6).setCellRenderer(right);        
+            jTable1.getColumnModel().getColumn(6).setCellRenderer(right);
         } catch (SQLException e) {
+            Component rootPane = null;
+            JOptionPane.showMessageDialog(rootPane, "Gagal Menampilkan Data");
         }
     }
 
+    // untuk mengambil data dan menambah ke dalam cobo box
     private void ambil_kategori() {
         try {
             cb_kategori.addItem("Pilih Kategori");
@@ -166,6 +175,7 @@ public class DataBarang extends javax.swing.JInternalFrame {
         }
     }
 
+    // untuk mengambil data dan menambah ke dalam cobo box
     private void ambil_satuan() {
         try {
             cb_satuan.addItem("Pilih Satuan");
@@ -183,22 +193,29 @@ public class DataBarang extends javax.swing.JInternalFrame {
         }
     }
 
+    // memberi nilai textData dengan nilai yang sesuai dengan table
     private void setTextData() {
+
+        // mendapatkan baris ke-X sesuai table
         int baris = Integer.parseInt(txt_baris.getText());
 
+        // mengambil data sesuai baris dan kolom ke-X
         String kode = jTable1.getValueAt(baris, 0).toString();
-        txt_kode.setText(kode);
         String nama = jTable1.getValueAt(baris, 1).toString();
-        txt_nama.setText(nama);
         String kategori = jTable1.getValueAt(baris, 2).toString();
-        cb_kategori.setSelectedItem(kategori);
         String stok = jTable1.getValueAt(baris, 3).toString();
-        txt_stok.setText(stok);
         String satuan = jTable1.getValueAt(baris, 4).toString();
-        cb_satuan.setSelectedItem(satuan);
         String hrg_jual = jTable1.getValueAt(baris, 5).toString();
         String hrg_beli = jTable1.getValueAt(baris, 6).toString();
-        
+
+        // menaruh data ke dalam objek txt
+        txt_kode.setText(kode);
+        txt_nama.setText(nama);
+        cb_kategori.setSelectedItem(kategori);
+        txt_stok.setText(stok);
+        cb_satuan.setSelectedItem(satuan);
+
+        // mengkonversi format rupiah ke dalam normal String
         DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
         DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
         formatRp.setCurrencySymbol("");
@@ -206,23 +223,85 @@ public class DataBarang extends javax.swing.JInternalFrame {
         formatRp.setGroupingSeparator('.');
         kursIndonesia.setDecimalFormatSymbols(formatRp);
         try {
-            
-        Number number = kursIndonesia.parse(hrg_jual);
-        double nilai = number.doubleValue();
-        int nilai2 = (int) nilai;
-        String harga_jual = String.valueOf(nilai2);
-        txt_hrg_jual.setText(harga_jual);
-        
-        Number number3 = kursIndonesia.parse(hrg_beli);
-        double nilai5 = number3.doubleValue();
-        int nilai6 = (int) nilai5;
-        String harga_beli = String.valueOf(nilai6);
-        txt_hrg_beli.setText(harga_beli);
+
+            // proses konversi dan menaruh kedalam objek text
+            Number number = kursIndonesia.parse(hrg_jual);
+            double nilai = number.doubleValue();
+            int nilai2 = (int) nilai;
+            String harga_jual = String.valueOf(nilai2);
+            txt_hrg_jual.setText(harga_jual);
+
+            // proses konversi dan menaruh kedalam objek text
+            Number number3 = kursIndonesia.parse(hrg_beli);
+            double nilai5 = number3.doubleValue();
+            int nilai6 = (int) nilai5;
+            String harga_beli = String.valueOf(nilai6);
+            txt_hrg_beli.setText(harga_beli);
+        } catch (ParseException ex) {
+            System.out.println("Kesalahan Parsing");
         }
-        catch (ParseException ex) {
-                System.out.println("Kesalahan Parsing");
+
+    }
+
+    // kondisi setelah action button
+    public void kodisi_after_action() {
+        tampil_data();
+        reset_input();
+        button_awal();
+        txt_kode.setEditable(true);
+        custom_tabel();
+    }
+
+    // proses pencarian
+    public void pencarian() {
+
+        // membuat table
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan", "Harga Jual", "Harga Distributor"
+                }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+                return tdk_bisa_edit[column];
+            }
+        };
+        try {
+            String cari = txt_cari.getText();
+            String sql = "SELECT * FROM barang b JOIN kategori k ON b.id_kategori=k.id_kategori JOIN satuan s ON b.id_satuan = s.id_satuan "
+                    + "WHERE b.id_barang LIKE '%" + cari + "%' OR b.nm_barang LIKE '%" + cari + "%' OR k.nm_kategori LIKE '%" + cari + "%' OR b.hrg_jual LIKE '%" + cari
+                    + "%' OR b.jml_stok LIKE '%" + cari + "%' OR s.nm_satuan LIKE '%" + cari + "%' OR b.hrg_beli LIKE '%" + cari + "%' ORDER BY b.nm_barang ASC";
+            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            while (res.next()) {
+                int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
+                double angka = (double) hrg_eceran;
+                String harga_eceran = String.format("%,.0f", angka).replaceAll(",", ".");
+
+                int hrg_beli = Integer.parseInt(res.getString("hrg_beli"));
+                double angka3 = (double) hrg_beli;
+                String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
+
+                // menambahkan baris data ke dalam tabel
+                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"),
+                    harga_eceran, harga_beli});
+            }
+            jTable1.setModel(model);
+            DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+            right.setHorizontalAlignment(JLabel.RIGHT);
+            jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
+            jTable1.getColumnModel().getColumn(6).setCellRenderer(right);
+            txt_cari.setText(null);
+            custom_tabel();
+        } catch (Exception ex) {
+            Component rootPane = null;
+            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
+
         }
-        
     }
 
     /**
@@ -420,13 +499,17 @@ public class DataBarang extends javax.swing.JInternalFrame {
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
         // TODO add your handling code here:
+
+        // mengambil data kode dari txt
         String kode_barang = txt_kode.getText();
         try {
-            // TODO add your handling code here:
+            // koneksi database
             com.mysql.jdbc.Connection c = (com.mysql.jdbc.Connection) Koneksi.configDB();
             Statement stat = c.createStatement();
             String sql2 = "SELECT * FROM barang WHERE id_barang='" + kode_barang + "'";
             ResultSet rs = stat.executeQuery(sql2);
+
+            // validasi
             if (txt_kode.getText().equals("") || txt_nama.getText().equals("") || cb_kategori.getSelectedItem() == "Pilih Kategori" || txt_stok.getText().equals("") || cb_satuan.getSelectedItem() == "Pilih Satuan" || txt_hrg_jual.getText().equals("") || txt_hrg_beli.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Masukkan data dengan benar !", "Kesalahan", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -444,40 +527,35 @@ public class DataBarang extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, e.getMessage());
                 }
             }
-            tampil_data();
-            reset_input();
-            button_awal();
-            txt_kode.setEditable(true);
-            custom_tabel();
+            kodisi_after_action();
+
         } catch (SQLException ex) {
-            Logger.getLogger(Distributor.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            // Logger.getLogger(Distributor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+        // kondisi setelah table di click
         button_tabelklik();
-        txt_kode.setEditable(false);
         int baris = jTable1.rowAtPoint(evt.getPoint());
         txt_baris.setText(String.valueOf(baris));
         setTextData();
-
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
-        // TODO add your handling code here:
-        tampil_data();
-        reset_input();
-        button_awal();
-        txt_kode.setEditable(true);
+        // kondisi setelah batal di click
+        kodisi_after_action();
     }//GEN-LAST:event_btn_batalActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        // TODO add your handling code here:
+        // validasi jika kosong
         if (txt_kode.getText().equals("") || txt_nama.getText().equals("") || cb_kategori.getSelectedItem() == "Pilih Kategori" || txt_stok.getText().equals("") || cb_satuan.getSelectedItem() == "Pilih Satuan" || txt_hrg_jual.getText().equals("") || txt_hrg_beli.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Masukkan data dengan benar !", "Kesalahan", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        // update action
         try {
             String sql = "UPDATE barang SET id_kategori = '" + txt_id_kategori.getText() + "', id_satuan = '" + txt_id_satuan.getText() + "', nm_barang = '" + txt_nama.getText() + "',jml_stok = '" + txt_stok.getText() + "',hrg_jual = '" + txt_hrg_jual.getText() + "',hrg_beli = '" + txt_hrg_beli.getText() + "' WHERE id_barang = '" + txt_kode.getText() + "'";
             java.sql.Connection conn = (com.mysql.jdbc.Connection) Koneksi.configDB();
@@ -487,15 +565,13 @@ public class DataBarang extends javax.swing.JInternalFrame {
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Perubahan Data Gagal" + e.getMessage());
         }
-        tampil_data();
-        reset_input();
-        button_awal();
-        txt_kode.setEditable(true);
-        custom_tabel();
+
+        // kondisi setelah button update di click
+        kodisi_after_action();
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
-        // TODO add your handling code here:
+        // validasi konfirmasi
         int konfirmasi = JOptionPane.showConfirmDialog(null, "Apakah yakin dihapus?", "Hapus", JOptionPane.YES_NO_OPTION);
         if (konfirmasi == 0) {
             try {
@@ -507,59 +583,13 @@ public class DataBarang extends javax.swing.JInternalFrame {
             } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
-            tampil_data();
-            reset_input();
-            button_awal();
-            txt_kode.setEditable(true);
-            custom_tabel();
+            kodisi_after_action();
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan" , "Harga Jual" , "Harga Distributor"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
-        {
-            boolean[] tdk_bisa_edit = new boolean[]{
-            false, false, false, false,false,false,false,false
-            };
-
-            public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
-            }
-        };
-        try {
-            String cari = txt_cari.getText();
-            String sql = "SELECT * FROM barang b JOIN kategori k ON b.id_kategori=k.id_kategori JOIN satuan s ON b.id_satuan = s.id_satuan "
-                    + "WHERE b.id_barang LIKE '%" + cari + "%' OR b.nm_barang LIKE '%" + cari + "%' OR k.nm_kategori LIKE '%" + cari + "%' OR b.hrg_jual LIKE '%" + cari
-                    + "%' OR b.jml_stok LIKE '%" + cari + "%' OR s.nm_satuan LIKE '%" + cari + "%' OR b.hrg_beli LIKE '%" + cari + "%' ORDER BY b.nm_barang ASC";
-            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
-                int hrg_beli = Integer.parseInt(res.getString("hrg_beli"));
-                double angka = (double) hrg_eceran;
-                String harga_eceran = String.format("%,.0f", angka).replaceAll(",", ".");
-                double angka3 = (double) hrg_beli;
-                String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
-                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"), 
-                    harga_eceran,harga_beli});
-            }
-            jTable1.setModel(model);
-            DefaultTableCellRenderer right = new DefaultTableCellRenderer();
-            right.setHorizontalAlignment(JLabel.RIGHT);
-            jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
-            jTable1.getColumnModel().getColumn(6).setCellRenderer(right);        
-            txt_cari.setText(null);
-            custom_tabel();
-        } catch (Exception ex) {
-            Component rootPane = null;
-            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
-
-        }
+        pencarian();
     }//GEN-LAST:event_btn_cariActionPerformed
 
     private void txt_stokKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_stokKeyTyped
@@ -615,7 +645,7 @@ public class DataBarang extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cb_satuanActionPerformed
 
     private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
-        // TODO add your handling code here:
+        // jika button keyboard arah di click 
         int row = this.jTable1.getSelectedRow();
         this.txt_baris.setText(String.valueOf(row));
         setTextData();
@@ -623,49 +653,7 @@ public class DataBarang extends javax.swing.JInternalFrame {
 
     private void txt_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cariActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama", "Kategori", "Stok", "Satuan" , "Harga Jual" , "Harga Distributor"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
-        {
-            boolean[] tdk_bisa_edit = new boolean[]{
-            false, false, false, false,false,false,false,false
-            };
-
-            public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
-            }
-        };
-        try {
-            String cari = txt_cari.getText();
-            String sql = "SELECT * FROM barang b JOIN kategori k ON b.id_kategori=k.id_kategori JOIN satuan s ON b.id_satuan = s.id_satuan "
-                    + "WHERE b.id_barang LIKE '%" + cari + "%' OR b.nm_barang LIKE '%" + cari + "%' OR k.nm_kategori LIKE '%" + cari + "%' OR b.hrg_jual LIKE '%" + cari
-                    + "%' OR b.jml_stok LIKE '%" + cari + "%' OR s.nm_satuan LIKE '%" + cari + "%' OR b.hrg_beli LIKE '%" + cari + "%' ORDER BY b.nm_barang ASC";
-            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                int hrg_eceran = Integer.parseInt(res.getString("hrg_jual"));
-                int hrg_beli = Integer.parseInt(res.getString("hrg_beli"));
-                double angka = (double) hrg_eceran;
-                String harga_eceran = String.format("%,.0f", angka).replaceAll(",", ".");
-                double angka3 = (double) hrg_beli;
-                String harga_beli = String.format("%,.0f", angka3).replaceAll(",", ".");
-                model.addRow(new Object[]{res.getString(1), res.getString(4), res.getString("k.nm_kategori"), res.getString(5), res.getString("s.nm_satuan"), 
-                    harga_eceran,harga_beli});
-            }
-            jTable1.setModel(model);
-            DefaultTableCellRenderer right = new DefaultTableCellRenderer();
-            right.setHorizontalAlignment(JLabel.RIGHT);
-            jTable1.getColumnModel().getColumn(5).setCellRenderer(right);
-            jTable1.getColumnModel().getColumn(6).setCellRenderer(right);        
-            txt_cari.setText(null);
-            custom_tabel();
-        } catch (Exception ex) {
-            Component rootPane = null;
-            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
-
-        }
+        pencarian();
     }//GEN-LAST:event_txt_cariActionPerformed
 
 
