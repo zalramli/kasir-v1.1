@@ -41,20 +41,29 @@ public class Kategori extends javax.swing.JInternalFrame {
         custom_tabel();
         txt_baris.setVisible(false);
     }
-    
-    private void custom_tabel()
-    {
+
+    private void custom_tabel() {
+        //ngatur widht coloumn nama barang
+//        TableColumn col1 = jTable1.getColumnModel().getColumn(1);
+//        col1.setMinWidth(450);
+//        col1.setMaxWidth(450);
+//        col1.setWidth(450);
+//        col1.setPreferredWidth(450);
+
         //ngatur font
-        jTable1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        jTable1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
         //ngatur jarak tinggi
         jTable1.setRowHeight(50);
+
         //ngatur header
         JTableHeader Theader = jTable1.getTableHeader();
-        Theader.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        Theader.setFont(new Font("Tahoma", Font.PLAIN, 14));
         ((DefaultTableCellRenderer) Theader.getDefaultRenderer())
                 .setHorizontalAlignment(JLabel.CENTER);
     }
 
+    // untuk menghilangkan dekorasi pada frame
     void removeDecoration() {
         for (MouseListener listener : ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).getNorthPane().getMouseListeners()) {
             ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).getNorthPane().removeMouseListener(listener);
@@ -66,33 +75,39 @@ public class Kategori extends javax.swing.JInternalFrame {
     private void tampil_data() {
         // membuat tampilan model tabel
         DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama Kategori"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
+                new Object[][]{},
+                new String[]{"No", "Kode", "Nama Kategori"
+                }) // BIAR FIELD TABEL TIDAK BISA EDIT
         {
             boolean[] tdk_bisa_edit = new boolean[]{
-            false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
+                return tdk_bisa_edit[column];
             }
         };
         //menampilkan data database kedalam tabel
         try {
-            //int no=1;
+
+            int no = 0;
+
             String sql = "SELECT * FROM kategori";
             java.sql.Connection conn = (com.mysql.jdbc.Connection) Koneksi.configDB();
             java.sql.Statement stm = conn.createStatement();
             java.sql.ResultSet res = stm.executeQuery(sql);
             while (res.next()) {
-                model.addRow(new Object[]{res.getString(1), res.getString(2)});
+
+                no = no + 1;
+
+                model.addRow(new Object[]{no, res.getString(1), res.getString(2)});
             }
             jTable1.setModel(model);
         } catch (SQLException e) {
         }
     }
 
+    // fungsi untuk mendapatkan generate kode
     public void kode() {
         try {
             com.mysql.jdbc.Connection c = (com.mysql.jdbc.Connection) Koneksi.configDB();
@@ -118,6 +133,7 @@ public class Kategori extends javax.swing.JInternalFrame {
         }
     }
 
+    // kondisi deafult button 
     public void button_awal() {
         btn_simpan.setEnabled(true);
         btn_batal.setEnabled(true);
@@ -125,11 +141,13 @@ public class Kategori extends javax.swing.JInternalFrame {
         btn_hapus.setEnabled(false);
     }
 
+    // mereset inputan
     private void reset_input() {
         txt_kategori.setText(null);
         txt_baris.setText(null);
     }
 
+    // kondisi ketika table di click
     public void button_tabelklik() {
         btn_simpan.setEnabled(false);
         btn_batal.setEnabled(true);
@@ -137,14 +155,68 @@ public class Kategori extends javax.swing.JInternalFrame {
         btn_hapus.setEnabled(true);
 
     }
-    
-    private void setTextData(){
+
+    // mengeset data ketika mengeclick table
+    private void setTextData() {
+
+        // mendapatakan data baris ke-X
         int baris = Integer.parseInt(txt_baris.getText());
-        
-        String id = jTable1.getValueAt(baris, 0).toString();
+
+        // mengambil data dari bari dan kolom ke-X
+        String id = jTable1.getValueAt(baris, 1).toString();
+        String nama = jTable1.getValueAt(baris, 2).toString();
+
+        // mengeset text sesuai data table
         txt_kode.setText(id);
-        String nama = jTable1.getValueAt(baris, 1).toString();
         txt_kategori.setText(nama);
+    }
+
+    // kondisi setelah action button
+    public void kodisi_after_action() {
+        tampil_data();
+        kode();
+        reset_input();
+        button_awal();
+        custom_tabel();
+    }
+
+    public void pencaharian() {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"No","Kode", "Nama Kategori"
+                }) // BIAR FIELD TABEL TIDAK BISA EDIT
+        {
+            boolean[] tdk_bisa_edit = new boolean[]{
+                false,false, false
+            };
+
+            public boolean isCellEditable(int row, int column) {
+                return tdk_bisa_edit[column];
+            }
+        };
+        try {
+            
+            int no = 0;
+            
+            String cari = txt_cari.getText();
+            String sql = "SELECT * FROM kategori WHERE id_kategori LIKE '%" + cari + "%' OR nm_kategori LIKE '%" + cari + "%' ORDER BY id_kategori";
+            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            while (res.next()) {
+                
+                no = no + 1 ;
+                
+                model.addRow(new Object[]{no,res.getString(1), res.getString(2)});
+            }
+            jTable1.setModel(model);
+            txt_cari.setText(null);
+            custom_tabel();
+        } catch (Exception ex) {
+            Component rootPane = null;
+            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
+
+        }
     }
 
     /**
@@ -293,11 +365,9 @@ public class Kategori extends javax.swing.JInternalFrame {
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        tampil_data();
-        kode();
-        reset_input();
-        button_awal();
-        custom_tabel();
+
+        // reset
+        kodisi_after_action();
     }//GEN-LAST:event_btn_simpanActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -324,11 +394,9 @@ public class Kategori extends javax.swing.JInternalFrame {
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Perubahan Data Gagal" + e.getMessage());
         }
-        tampil_data();
-        kode();
-        reset_input();
-        button_awal();
-        custom_tabel();
+
+        // reset
+        kodisi_after_action();
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
@@ -344,104 +412,37 @@ public class Kategori extends javax.swing.JInternalFrame {
             } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             }
-            tampil_data();
-            kode();
-            reset_input();
-            button_awal();
-            custom_tabel();
-        }
-        else
-        {
-            tampil_data();
-            kode();
-            reset_input();
-            button_awal();
-            custom_tabel();
+
+            // reset
+            kodisi_after_action();
+        } else {
+            // reset
+            kodisi_after_action();
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
 
     private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
-        // TODO add your handling code here:
-        tampil_data();
-        kode();
-        reset_input();
-        button_awal();
-        custom_tabel();
+
+        // reset
+        kodisi_after_action();
     }//GEN-LAST:event_btn_batalActionPerformed
 
     private void btn_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cariActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama Kategori"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
-        {
-            boolean[] tdk_bisa_edit = new boolean[]{
-            false, false
-            };
-
-            public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
-            }
-        };
-        try {
-            String cari = txt_cari.getText();
-            String sql = "SELECT * FROM kategori WHERE id_kategori LIKE '%" + cari + "%' OR nm_kategori LIKE '%" + cari + "%' ORDER BY id_kategori";
-            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                model.addRow(new Object[]{res.getString(1), res.getString(2)});
-            }
-            jTable1.setModel(model);
-            txt_cari.setText(null);
-            custom_tabel();
-        } catch (Exception ex) {
-            Component rootPane = null;
-            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
-
-        }
+        pencaharian();
     }//GEN-LAST:event_btn_cariActionPerformed
 
     private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
         // TODO add your handling code here:
         int row = this.jTable1.getSelectedRow();
         this.txt_baris.setText(String.valueOf(row));
+
         setTextData();
     }//GEN-LAST:event_jTable1KeyReleased
 
     private void txt_cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cariActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"Kode", "Nama Kategori"
-            }) // BIAR FIELD TABEL TIDAK BISA EDIT
-        {
-            boolean[] tdk_bisa_edit = new boolean[]{
-            false, false
-            };
-
-            public boolean isCellEditable(int row, int column) {
-            return tdk_bisa_edit[column];
-            }
-        };
-        try {
-            String cari = txt_cari.getText();
-            String sql = "SELECT * FROM kategori WHERE id_kategori LIKE '%" + cari + "%' OR nm_kategori LIKE '%" + cari + "%' ORDER BY id_kategori";
-            java.sql.Connection conn = (java.sql.Connection) Koneksi.configDB();
-            java.sql.Statement stm = conn.createStatement();
-            java.sql.ResultSet res = stm.executeQuery(sql);
-            while (res.next()) {
-                model.addRow(new Object[]{res.getString(1), res.getString(2)});
-            }
-            jTable1.setModel(model);
-            txt_cari.setText(null);
-            custom_tabel();
-        } catch (Exception ex) {
-            Component rootPane = null;
-            JOptionPane.showMessageDialog(rootPane, "Data yang dicari tidak ada !!!!");
-
-        }
+        pencaharian();
     }//GEN-LAST:event_txt_cariActionPerformed
 
     private void txt_kategoriFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_kategoriFocusGained
